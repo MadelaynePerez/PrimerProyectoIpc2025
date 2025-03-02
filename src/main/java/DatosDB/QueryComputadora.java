@@ -8,6 +8,7 @@ import Modelos.Computadora;
 import Modelos.Coneccion;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 /**
  *
@@ -32,6 +33,53 @@ public class QueryComputadora {
         if (pstmt != null) pstmt.close();
         if (connection != null) connection.close();
     }
+}
+public Computadora encontrarPorNombre(String nombre) {
+    Connection connection = null;
+    PreparedStatement pstmt = null;
+
+    try {
+       
+        connection = Coneccion.getConnection();
+
+        
+        String sql = "SELECT id_computadora, nombre, precio_venta FROM Computadora WHERE nombre = ?";
+        
+        
+        pstmt = connection.prepareStatement(sql);
+        
+      
+        pstmt.setString(1, nombre);
+        
+       
+        ResultSet resultado = pstmt.executeQuery();
+        
+        
+        if (resultado.next()) {
+            int idComputadora = resultado.getInt("id_computadora");
+            String nombreComputadora = resultado.getString("nombre");
+            double precioVenta = resultado.getDouble("precio_venta");
+            
+         
+            return new Computadora(idComputadora, nombreComputadora, precioVenta);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    return null;
 }
 
 }
