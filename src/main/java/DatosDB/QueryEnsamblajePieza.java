@@ -9,13 +9,15 @@ import Modelos.EnsamblajePieza;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author DELL
  */
 public class QueryEnsamblajePieza {
-       public boolean crear(EnsamblajePieza ensamblajePieza) throws SQLException {
+       public boolean crear(EnsamblajePieza ensamblajePieza)  {
         Connection connection = null;
         PreparedStatement pstmt = null;
 
@@ -30,9 +32,20 @@ public class QueryEnsamblajePieza {
 
             int filasInsertadas = pstmt.executeUpdate();
             return filasInsertadas > 0;
-        } finally {
-            if (pstmt != null) pstmt.close();
-            if (connection != null) connection.close();
+        }  catch (SQLException ex) {
+               Logger.getLogger(QueryEnsamblajePieza.class.getName()).log(Level.SEVERE, null, ex);
+           } finally {
+            if (pstmt != null) try {
+                pstmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(QueryEnsamblajePieza.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (connection != null) try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(QueryEnsamblajePieza.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+           return false;
     }
 }

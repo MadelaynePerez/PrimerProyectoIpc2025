@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,7 +19,7 @@ import java.sql.SQLException;
  */
 public class QueryComponente {
 
-    public boolean crear(Componente componente) throws SQLException {
+    public boolean crear(Componente componente) {
         Connection connection = null;
         PreparedStatement pstmt = null;
 
@@ -32,14 +34,25 @@ public class QueryComponente {
 
             int filasInsertadas = pstmt.executeUpdate();
             return filasInsertadas > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(QueryComponente.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (pstmt != null) {
-                pstmt.close();
+                try {
+                    pstmt.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(QueryComponente.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             if (connection != null) {
-                connection.close();
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(QueryComponente.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
+        return false;
     }
 
     public Componente encontrarPorNombre(String nombre) {
@@ -47,19 +60,15 @@ public class QueryComponente {
         PreparedStatement pstmt = null;
 
         try {
-           
+
             connection = Coneccion.getConnection();
 
-            
             String sql = "SELECT id_componente, nombre, costo, cantidad_stock FROM Componente WHERE nombre = ?";
 
-          
             pstmt = connection.prepareStatement(sql);
 
-            
             pstmt.setString(1, nombre);
 
-            
             ResultSet resultado = pstmt.executeQuery();
 
             if (resultado.next()) {
@@ -68,7 +77,6 @@ public class QueryComponente {
                 double costo = resultado.getDouble("costo");
                 int cantidadStock = resultado.getInt("cantidad_stock");
 
-                
                 return new Componente(idComponente, nombreComponente, costo, cantidadStock);
             }
 

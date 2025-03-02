@@ -9,7 +9,8 @@ package Modelos;
  * @author DELL
  */
 public class EnsamblajePieza {
- private int idEnsamblaje;
+
+    private int idEnsamblaje;
     private Computadora computadora;
     private Componente componente;
     private int cantidad;
@@ -52,6 +53,5 @@ public class EnsamblajePieza {
         this.componente = componente;
         this.cantidad = cantidad;
     }
-    
-    
+
 }
