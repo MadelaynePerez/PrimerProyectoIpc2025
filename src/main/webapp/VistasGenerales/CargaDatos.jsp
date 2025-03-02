@@ -60,7 +60,7 @@
 <body>
     <div class="container">
         <h2>Carga de Datos</h2>
-        <form action="cargarDatosProcess.jsp" method="post" enctype="multipart/form-data">
+        <form action="/ComputadoraFeliz/CargaArchivoServlet" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="archivo">Seleccione el archivo de datos:</label>
                 <input type="file" id="archivo" name="archivo" required>

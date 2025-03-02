@@ -9,10 +9,11 @@ package Modelos;
  * @author DELL
  */
 public class Usuario {
+
     private int idUsuario;
     private String nombreUsuario;
     private String password;
-    private String rol;
+    private Rol rol;
 
     public int getIdUsuario() {
         return idUsuario;
@@ -38,19 +39,19 @@ public class Usuario {
         this.password = password;
     }
 
-    public String getRol() {
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
     }
 
-    public Usuario(int idUsuario, String nombreUsuario, String password, String rol) {
+    public Usuario(int idUsuario, String nombreUsuario, String password, Rol rol) {
         this.idUsuario = idUsuario;
         this.nombreUsuario = nombreUsuario;
         this.password = password;
         this.rol = rol;
     }
-    
+
 }
