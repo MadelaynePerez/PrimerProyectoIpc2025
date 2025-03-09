@@ -9,7 +9,8 @@ package Modelos;
  * @author DELL
  */
 public class Computadora {
-     private int idComputadora;
+
+    private int idComputadora;
     private String nombre;
     private double precioVenta;
 
@@ -37,11 +38,14 @@ public class Computadora {
         this.precioVenta = precioVenta;
     }
 
+    public Computadora() {
+
+    }
+
     public Computadora(int idComputadora, String nombre, double precioVenta) {
         this.idComputadora = idComputadora;
         this.nombre = nombre;
         this.precioVenta = precioVenta;
     }
-    
-    
+
 }

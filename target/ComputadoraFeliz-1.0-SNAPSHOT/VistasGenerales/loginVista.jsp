@@ -59,7 +59,7 @@
 <body>
     <div class="login-container">
         <h2>Inicio de Sesión</h2>
-        <form action="loginProcess.jsp" method="post">
+        <form action="/ComputadoraFeliz/LoginServlet" method="post">
             <div class="form-group">
                 <label for="username">Usuario:</label>
                 <input type="text" id="username" name="username" required>
@@ -74,6 +74,7 @@
             <% if (request.getParameter("error") != null) { %>
                 <div class="error-message">Usuario o contraseña incorrectos.</div>
             <% } %>
+             <%@ include file="../mensajes.jsp" %>
         </form>
     </div>
 </body>

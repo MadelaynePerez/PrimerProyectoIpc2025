@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,6 +69,134 @@ public class QueryComputadora {
             pstmt = connection.prepareStatement(sql);
 
             pstmt.setString(1, nombre);
+
+            ResultSet resultado = pstmt.executeQuery();
+
+            if (resultado.next()) {
+                int idComputadora = resultado.getInt("id_computadora");
+                String nombreComputadora = resultado.getString("nombre");
+                double precioVenta = resultado.getDouble("precio_venta");
+
+                return new Computadora(idComputadora, nombreComputadora, precioVenta);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    public List<Computadora> listarComputadoras() {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<Computadora> computadoras = new ArrayList<>();
+
+        try {
+            connection = Coneccion.getConnection();
+
+            // Consulta SQL para listar las computadoras con nombre y precio de venta
+            String sql = "SELECT c.id_computadora, c.nombre, c.precio_venta FROM computadora c";
+            pstmt = connection.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            // Procesar el resultado
+            while (rs.next()) {
+                Computadora computadora = new Computadora();
+                computadora.setIdComputadora(rs.getInt("id_computadora"));
+                computadora.setNombre(rs.getString("nombre"));
+                computadora.setPrecioVenta(rs.getDouble("precio_venta"));
+                computadoras.add(computadora);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QueryComputadora.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return computadoras;
+    }
+
+    public List<Computadora> listarComputadorasParaEnsamblar() {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        QueryEnsamblajePieza queryEnsamblajePieza = new QueryEnsamblajePieza();
+        ResultSet rs = null;
+        List<Computadora> computadoras = new ArrayList<>();
+
+        try {
+            connection = Coneccion.getConnection();
+
+            // Consulta SQL para listar las computadoras con nombre y precio de venta
+            String sql = "SELECT c.id_computadora, c.nombre, c.precio_venta FROM computadora c";
+            pstmt = connection.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            // Procesar el resultado
+            while (rs.next()) {
+                if (queryEnsamblajePieza.validarSiTieneReceta(rs.getInt("id_computadora"))) {
+                    Computadora computadora = new Computadora();
+                    computadora.setIdComputadora(rs.getInt("id_computadora"));
+                    computadora.setNombre(rs.getString("nombre"));
+                    computadora.setPrecioVenta(rs.getDouble("precio_venta"));
+                    computadoras.add(computadora);
+                }
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QueryComputadora.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return computadoras;
+    }
+
+    public Computadora encontrarPorId(int id) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+
+        try {
+
+            connection = Coneccion.getConnection();
+
+            String sql = "SELECT id_computadora, nombre, precio_venta FROM Computadora WHERE id_computadora = ?";
+
+            pstmt = connection.prepareStatement(sql);
+
+            pstmt.setInt(1, id);
 
             ResultSet resultado = pstmt.executeQuery();
 

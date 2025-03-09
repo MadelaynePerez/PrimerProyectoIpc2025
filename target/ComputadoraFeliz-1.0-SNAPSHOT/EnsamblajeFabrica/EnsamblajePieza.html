@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Ensamblaje</title>
+    <script>
+        let piezaCount = 0;
+
+        // Función para agregar una fila de pieza
+        function agregarPieza() {
+            piezaCount++;
+            const piezaRow = document.createElement("div");
+            piezaRow.classList.add("pieza-row");
+            piezaRow.id = `pieza-${piezaCount}`;
+            piezaRow.innerHTML = `
+                <label for="pieza-${piezaCount}-id">Pieza ${piezaCount}:</label>
+                <select name="piezas[${piezaCount}].id_componente" id="pieza-${piezaCount}-id">
+                    <option value="1">Pieza 1</option>
+                    <option value="2">Pieza 2</option>
+                    <!-- Agregar piezas dinámicamente desde la base de datos -->
+                </select>
+                <input type="number" name="piezas[${piezaCount}].cantidad" min="1" value="1" />
+                <button type="button" onclick="eliminarPieza(${piezaCount})">Eliminar</button>
+            `;
+            document.getElementById("piezas").appendChild(piezaRow);
+        }
+
+        // Función para eliminar una fila de pieza
+        function eliminarPieza(piezaId) {
+            const row = document.getElementById(`pieza-${piezaId}`);
+            row.remove();
+        }
+    </script>
+</head>
+<body>
+    <h2>Registrar Ensamblaje</h2>
+    <form action="RegistrarEnsamblajeServlet" method="POST">
+        <!-- Seleccionar computadora -->
+        <label for="computadora">Selecciona Computadora:</label>
+        <select id="computadora" name="id_computadora">
+            <option value="1">Computadora 1</option>
+            <option value="2">Computadora 2</option>
+            <!-- Agregar computadoras dinámicamente desde la base de datos -->
+        </select>
+
+        <br><br>
+
+        <!-- Piezas -->
+        <div id="piezas">
+            <!-- Aquí se agregarán dinámicamente las piezas -->
+        </div>
+        
+        <button type="button" onclick="agregarPieza()">Agregar Pieza</button>
+
+        <br><br>
+        <input type="submit" value="Registrar Ensamblaje" />
+    </form>
+</body>
+</html>

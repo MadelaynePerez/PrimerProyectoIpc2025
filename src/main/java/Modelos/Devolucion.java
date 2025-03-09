@@ -15,6 +15,7 @@ public class Devolucion {
     private Venta venta;
     private Date fechaDevolucion;
     private double perdida;
+    private ComputadoraEnsamblada ComputadoraEnsamblada;
 
     public int getIdDevolucion() {
         return idDevolucion;
@@ -48,11 +49,20 @@ public class Devolucion {
         this.perdida = perdida;
     }
 
-    public Devolucion(int idDevolucion, Venta venta, Date fechaDevolucion, double perdida) {
+    public Devolucion(int idDevolucion, Venta venta, Date fechaDevolucion, double perdida, ComputadoraEnsamblada ensamblada) {
         this.idDevolucion = idDevolucion;
         this.venta = venta;
         this.fechaDevolucion = fechaDevolucion;
         this.perdida = perdida;
+        this.ComputadoraEnsamblada = ensamblada;
+    }
+
+    public ComputadoraEnsamblada getComputadoraEnsamblada() {
+        return ComputadoraEnsamblada;
+    }
+
+    public void setComputadoraEnsamblada(ComputadoraEnsamblada ComputadoraEnsamblada) {
+        this.ComputadoraEnsamblada = ComputadoraEnsamblada;
     }
     
     

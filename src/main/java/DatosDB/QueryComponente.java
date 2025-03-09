@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -96,6 +98,114 @@ public class QueryComponente {
         }
 
         return null;
+    }
+
+    public boolean editarComponente(int idComponente, String nombre, double costo, int cantidadStock) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            connection = Coneccion.getConnection();
+            String sql = "UPDATE componente SET nombre = ?, costo = ?, cantidad_stock = ? WHERE id_componente = ?";
+            pstmt = connection.prepareStatement(sql);
+
+            pstmt.setString(1, nombre);
+            pstmt.setDouble(2, costo);
+            pstmt.setInt(3, cantidadStock);
+            pstmt.setInt(4, idComponente);
+
+            int filasActualizadas = pstmt.executeUpdate();
+            return filasActualizadas > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(QueryComponente.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return false;
+    }
+
+    public boolean eliminarComponente(int idComponente) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+       try {
+            connection = Coneccion.getConnection();
+            
+            String sql = "DELETE FROM componente WHERE id_componente = ?";
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, idComponente);
+            int filasEliminadas = pstmt.executeUpdate();
+            return filasEliminadas > 0;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QueryComponente.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+        return false;
+    }
+
+    public List<Componente> listarComponentes(boolean ordenAsc) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<Componente> componentes = new ArrayList<>();
+
+        try {
+            connection = Coneccion.getConnection();
+
+            String orden = ordenAsc ? "ASC" : "DESC";
+            String sql = "SELECT id_componente, nombre, costo, cantidad_stock FROM componente ORDER BY cantidad_stock " + orden;
+            pstmt = connection.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Componente componente = new Componente();
+                componente.setIdComponente(rs.getInt("id_componente"));
+                componente.setNombre(rs.getString("nombre"));
+                componente.setCosto(rs.getDouble("costo"));
+                componente.setCantidadStock(rs.getInt("cantidad_stock"));
+                componentes.add(componente);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(QueryComponente.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+            }
+        }
+
+        return componentes;
     }
 
 }

@@ -14,6 +14,7 @@ public class Usuario {
     private String nombreUsuario;
     private String password;
     private Rol rol;
+    private boolean Activo;
 
     public int getIdUsuario() {
         return idUsuario;
@@ -21,6 +22,14 @@ public class Usuario {
 
     public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public boolean isActivo() {
+        return Activo;
+    }
+
+    public void setActivo(boolean Activo) {
+        this.Activo = Activo;
     }
 
     public String getNombreUsuario() {
@@ -45,6 +54,9 @@ public class Usuario {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+    }
+
+    public Usuario() {
     }
 
     public Usuario(int idUsuario, String nombreUsuario, String password, Rol rol) {

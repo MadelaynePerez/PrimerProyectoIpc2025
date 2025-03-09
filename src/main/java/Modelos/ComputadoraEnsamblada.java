@@ -11,6 +11,7 @@ import java.sql.Date;
  * @author DELL
  */
 public class ComputadoraEnsamblada {
+
     private int idEnsamblado;
     private Computadora computadora;
     private Usuario usuario;
@@ -57,6 +58,10 @@ public class ComputadoraEnsamblada {
         this.costoTotal = costoTotal;
     }
 
+    public ComputadoraEnsamblada() {
+
+    }
+
     public ComputadoraEnsamblada(int idEnsamblado, Computadora computadora, Usuario usuario, Date fechaEnsamblaje, double costoTotal) {
         this.idEnsamblado = idEnsamblado;
         this.computadora = computadora;
@@ -64,7 +69,5 @@ public class ComputadoraEnsamblada {
         this.fechaEnsamblaje = fechaEnsamblaje;
         this.costoTotal = costoTotal;
     }
-    
-    
-    
+
 }

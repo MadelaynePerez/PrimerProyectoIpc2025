@@ -3,13 +3,19 @@ package Services;
 import DatosDB.QueryComponente;
 import DatosDB.QueryComputadora;
 import DatosDB.QueryEnsamblajePieza;
+import DatosDB.QueryEnsambleComputadora;
 import DatosDB.QueryUsuario;
 import Modelos.Componente;
 import Modelos.Computadora;
+import Modelos.ComputadoraEnsamblada;
 import Modelos.EnsamblajePieza;
 import Modelos.Rol;
 import Modelos.Usuario;
+import Utils.ConvertidorFecha;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.sql.Date;
 
 public class CargaArchivoService {
 
@@ -20,6 +26,9 @@ public class CargaArchivoService {
         QueryUsuario queryUsuario = new QueryUsuario();
         QueryComputadora queryComputadora = new QueryComputadora();
         QueryEnsamblajePieza queryEnsamblaje = new QueryEnsamblajePieza();
+        QueryEnsambleComputadora queryEnsambleComputadora = new QueryEnsambleComputadora();
+        ConvertidorFecha convertidorFecha = new ConvertidorFecha();
+        
 
         for (int i = 0; i < lineas.size(); i++) {
             String recuperarPalabra = lineas.get(i);
@@ -56,8 +65,13 @@ public class CargaArchivoService {
 
                     String nombre = valores[0].replace("\"", "").trim();
                     double costo = Double.parseDouble(valores[1].trim());
+                    int stock = 0;
+                    
+                    if(valores.length == 3){
+                        stock = Integer.parseInt(valores[1].trim());
+                    }
 
-                    Componente componente = new Componente(-1, nombre, costo, -1);
+                    Componente componente = new Componente(-1, nombre, costo, stock);
                     queryComponente.crear(componente);
 
                 } else if (recuperarPalabra.startsWith("COMPUTADORA")) {
@@ -112,9 +126,16 @@ public class CargaArchivoService {
 
                     if (compu == null) {
                         errores.add("Error en la línea " + (i + 1) + ": la computadora '" + tipoComputadora + "' no existe.");
+                        continue;
                     }
                     if (nombre == null) {
                         errores.add("Error en la línea " + (i + 1) + ": el usuario '" + usuario + "' no existe.");
+                        continue;
+                    }
+                    
+                    boolean validoParaEnsamblar = queryEnsambleComputadora.ensamblarComputadora(compu.getIdComputadora(), nombre.getIdUsuario(), convertidorFecha.ConvertirFecha(fecha));
+                    if(!validoParaEnsamblar){
+                        errores.add("Error en la línea " + (i + 1) + ": No hay stock necesario para ensamblar.");
                     }
                 } else {
                     errores.add("Error en la línea " + (i + 1) + ": comando desconocido.");
@@ -126,14 +147,6 @@ public class CargaArchivoService {
             }
         }
 
-        // Si hay errores, los imprimimos (o puedes retornarlos)
-        if (!errores.isEmpty()) {
-            System.out.println("Errores encontrados durante la carga:");
-            for (String error : errores) {
-                System.out.println(error);
-            }
-        }
-
-        return errores; // Retornar la lista de errores para manejar en otro lugar si es necesario
+        return errores;
     }
 }

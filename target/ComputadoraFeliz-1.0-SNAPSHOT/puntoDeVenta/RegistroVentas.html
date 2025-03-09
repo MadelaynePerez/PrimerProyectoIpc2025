@@ -1,0 +1,88 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Punto de Venta</title>
+    <script>
+        function buscarCliente() {
+            let nit = document.getElementById("nit").value;
+            if (nit.trim() === "") {
+                alert("Ingrese un NIT válido.");
+                return;
+            }
+
+            // Simulación de consulta al backend (reemplazar con fetch en producción)
+            let clienteExiste = nit === "123456"; // Simulación: el NIT "123456" existe
+
+            if (clienteExiste) {
+                document.getElementById("nombre").value = "Juan Pérez";
+                document.getElementById("telefono").value = "5555-5555";
+                document.getElementById("direccion").value = "Zona 1, Ciudad";
+                document.getElementById("registroCliente").style.display = "none";
+            } else {
+                document.getElementById("nombre").value = "";
+                document.getElementById("telefono").value = "";
+                document.getElementById("direccion").value = "";
+                document.getElementById("registroCliente").style.display = "block";
+            }
+        }
+
+        function agregarEnsamblaje() {
+            let tabla = document.getElementById("tablaEnsamblajes");
+            let row = tabla.insertRow();
+            let ensamblajeCell = row.insertCell(0);
+            let cantidadCell = row.insertCell(1);
+            let precioCell = row.insertCell(2);
+            let eliminarCell = row.insertCell(3);
+
+            ensamblajeCell.innerHTML = `<select name="id_ensamblaje[]">
+                <option value="1">Computadora Gamer</option>
+                <option value="2">Computadora Oficina</option>
+                <!-- Se cargarán dinámicamente desde la DB -->
+            </select>`;
+
+            cantidadCell.innerHTML = `<input type="number" name="cantidad[]" min="1" required>`;
+
+            precioCell.innerHTML = `<input type="text" name="precio[]" value="500.00" readonly>`;
+
+            eliminarCell.innerHTML = `<button type="button" onclick="this.parentNode.parentNode.remove()">Eliminar</button>`;
+        }
+    </script>
+</head>
+<body>
+    <h2>Punto de Venta</h2>
+
+    <form action="VentaServlet" method="post">
+        <label>NIT del Cliente:</label>
+        <input type="text" id="nit" name="nit" required>
+        <button type="button" onclick="buscarCliente()">Buscar</button>
+        <br><br>
+
+        <div id="registroCliente" style="display: none;">
+            <h3>Registrar Cliente</h3>
+            <label>Nombre:</label>
+            <input type="text" id="nombre" name="nombre">
+            <br>
+            <label>Teléfono:</label>
+            <input type="text" id="telefono" name="telefono">
+            <br>
+            <label>Dirección:</label>
+            <input type="text" id="direccion" name="direccion">
+            <br><br>
+        </div>
+
+        <h3>Productos</h3>
+        <table id="tablaEnsamblajes">
+            <tr>
+                <th>Computadora Ensamblada</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Acción</th>
+            </tr>
+        </table>
+        <button type="button" onclick="agregarEnsamblaje()">Agregar Producto</button>
+        <br><br>
+
+        <button type="submit">Realizar Venta</button>
+    </form>
+</body>
+</html>

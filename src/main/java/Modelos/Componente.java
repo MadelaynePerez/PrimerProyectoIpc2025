@@ -9,6 +9,7 @@ package Modelos;
  * @author DELL
  */
 public class Componente {
+
     private int idComponente;
     private String nombre;
     private double costo;
@@ -46,12 +47,14 @@ public class Componente {
         this.cantidadStock = cantidadStock;
     }
 
+    public Componente() {
+    }
+
     public Componente(int idComponente, String nombre, double costo, int cantidadStock) {
         this.idComponente = idComponente;
         this.nombre = nombre;
         this.costo = costo;
         this.cantidadStock = cantidadStock;
     }
-    
-    
+
 }

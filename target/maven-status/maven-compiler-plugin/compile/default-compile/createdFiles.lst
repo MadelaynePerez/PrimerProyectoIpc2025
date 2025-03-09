@@ -1,2 +1,9 @@
+Servlets\CrearUsuarioServlet.class
 Servlets\ClienteServlet.class
+Servlets\ListarComputadorasServlet.class
+Servlets\CrearComponenteServlet.class
+Utils\ConvertidorFecha.class
+Servlets\CrearComputadoraServlet.class
+Servlets\ListarComponentesServlet.class
+Servlets\ListarUsuarioServlet.class
 Servlets\CargaArchivoServlet.class
