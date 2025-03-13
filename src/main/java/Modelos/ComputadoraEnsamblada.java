@@ -17,7 +17,25 @@ public class ComputadoraEnsamblada {
     private Usuario usuario;
     private Date fechaEnsamblaje;
     private double costoTotal;
+    private boolean vendido;
+    private double nuevoPrecio;
 
+    public double getNuevoPrecio() {
+        return nuevoPrecio;
+    }
+
+    public void setNuevoPrecio(double nuevoPrecio) {
+        this.nuevoPrecio = nuevoPrecio;
+    }
+
+    public boolean isVendido() {
+        return vendido;
+    }
+
+    public void setVendido(boolean vendido) {
+        this.vendido = vendido;
+    }
+    
     public int getIdEnsamblado() {
         return idEnsamblado;
     }
@@ -62,12 +80,14 @@ public class ComputadoraEnsamblada {
 
     }
 
-    public ComputadoraEnsamblada(int idEnsamblado, Computadora computadora, Usuario usuario, Date fechaEnsamblaje, double costoTotal) {
+    public ComputadoraEnsamblada(int idEnsamblado, Computadora computadora, Usuario usuario, Date fechaEnsamblaje, double costoTotal, boolean vendido, double nuevoPrecio) {
         this.idEnsamblado = idEnsamblado;
         this.computadora = computadora;
         this.usuario = usuario;
         this.fechaEnsamblaje = fechaEnsamblaje;
         this.costoTotal = costoTotal;
+        this.vendido= vendido;
+        this.nuevoPrecio= nuevoPrecio;
     }
 
 }

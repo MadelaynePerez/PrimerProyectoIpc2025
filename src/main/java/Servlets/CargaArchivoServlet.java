@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.annotation.MultipartConfig;
 
 
@@ -94,8 +96,16 @@ public class CargaArchivoServlet extends HttpServlet {
        ArrayList<String>lineas = leer.Leer(request);
        
        CargaArchivoService cargar = new CargaArchivoService();
-       cargar.CargarArchivo(lineas);
+       List<String> cargaArchivo = cargar.CargarArchivo(lineas);
        
+        if (cargaArchivo.size() > 0) {
+             request.setAttribute("mensaje", "No se puede cargar el archivo"); 
+             request.setAttribute("errores", cargaArchivo);
+        }else {
+             request.setAttribute("mensaje", "archivo cargado exitosamente"); 
+        }
+        RequestDispatcher dispatcher = request.getRequestDispatcher("VistasGenerales/CargaDatos.jsp");
+        dispatcher.forward(request, response);
     }
 
     /**

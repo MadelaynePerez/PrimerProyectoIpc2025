@@ -16,6 +16,8 @@ public class Venta {
     private Date fechaVenta;
     private double totalVenta;
 
+    
+
     public int getIdVenta() {
         return idVenta;
     }

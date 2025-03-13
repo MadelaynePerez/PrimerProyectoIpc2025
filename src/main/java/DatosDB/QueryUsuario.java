@@ -27,15 +27,19 @@ public class QueryUsuario {
         Connection connection = null;
         PreparedStatement pstmt = null;
         EncriptarContrasenia encriptado = new EncriptarContrasenia();
-
+        Usuario usuarioExistente = encontrarPorNombre(usuario.getNombreUsuario());
         try {
+            if (usuarioExistente != null) {
+                return false;
+
+            }
             connection = Coneccion.getConnection();
             String sql = "INSERT INTO Usuario (nombre_usuario, password, id_rol) VALUES (?, ?, ?)";
             pstmt = connection.prepareStatement(sql);
 
             pstmt.setString(1, usuario.getNombreUsuario());
             pstmt.setString(2, encriptado.contraseniaEncriptada(usuario.getPassword()));
-            pstmt.setInt(3, usuario.getRol().getIdRol()); // Guardar ID del rol
+            pstmt.setInt(3, usuario.getRol().getIdRol());
 
             int filasInsertadas = pstmt.executeUpdate();
             return filasInsertadas > 0;

@@ -24,8 +24,11 @@ public class QueryComponente {
     public boolean crear(Componente componente) {
         Connection connection = null;
         PreparedStatement pstmt = null;
-
+      Componente componenteExisiste=  encontrarPorNombre(componente.getNombre());
         try {
+            if (componenteExisiste != null) {
+                return false;
+            }
             connection = Coneccion.getConnection();
             String sql = "INSERT INTO Componente (nombre, costo, cantidad_stock) VALUES (?, ?, ?)";
             pstmt = connection.prepareStatement(sql);
@@ -137,9 +140,9 @@ public class QueryComponente {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-       try {
+        try {
             connection = Coneccion.getConnection();
-            
+
             String sql = "DELETE FROM componente WHERE id_componente = ?";
             pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, idComponente);
@@ -206,6 +209,54 @@ public class QueryComponente {
         }
 
         return componentes;
+    }
+
+    public List<Componente> obtenerComponentesSinStock() {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet resultado = null;
+        List<Componente> componentesSinStock = new ArrayList<>();
+
+        try {
+
+            connection = Coneccion.getConnection();
+
+            String sql = "SELECT id_componente, nombre, costo, cantidad_stock FROM componente WHERE cantidad_stock = 0";
+
+            pstmt = connection.prepareStatement(sql);
+
+            resultado = pstmt.executeQuery();
+
+            while (resultado.next()) {
+                int idComponente = resultado.getInt("id_componente");
+                String nombreComponente = resultado.getString("nombre");
+                double costo = resultado.getDouble("costo");
+                int cantidadStock = resultado.getInt("cantidad_stock");
+
+                Componente componente = new Componente(idComponente, nombreComponente, costo, cantidadStock);
+                componentesSinStock.add(componente);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+
+            try {
+                if (resultado != null) {
+                    resultado.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return componentesSinStock;
     }
 
 }

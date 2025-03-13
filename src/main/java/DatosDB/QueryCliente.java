@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +25,7 @@ public class QueryCliente {
 
         try {
             connection = Coneccion.getConnection();
-            String sql = "INSERT INTO Cliente (nit, nombre, direccion, telefono) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO Cliente (nit, nombre, direccion) VALUES (?, ?, ?)";
             pstmt = connection.prepareStatement(sql);
 
             pstmt.setString(1, cliente.getNit());
@@ -50,14 +52,14 @@ public class QueryCliente {
         return false;
     }
 
-    public Cliente obtenerClientePorNit(String nit) throws SQLException {
+    public Cliente obtenerClientePorNit(String nit)  {
         Connection connection = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
         try {
             connection = Coneccion.getConnection();
-            String sql = "SELECT id_cliente, nit, nombre, direccion, telefono FROM Cliente WHERE nit = ?";
+            String sql = "SELECT id_cliente, nit, nombre, direccion FROM cliente WHERE nit = ?";
             pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, nit);
 
@@ -71,17 +73,32 @@ public class QueryCliente {
                 );
             }
             return null;
+        } catch (SQLException ex) {
+            Logger.getLogger(QueryCliente.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (rs != null) {
-                rs.close();
+                try {
+                    rs.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(QueryCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             if (pstmt != null) {
-                pstmt.close();
+                try {
+                    pstmt.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(QueryCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             if (connection != null) {
-                connection.close();
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(QueryCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
+        return null;
     }
 
 }

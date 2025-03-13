@@ -11,7 +11,7 @@ package Modelos;
 public class Cliente {
      private int idCliente;
     private String nit;
-    private String nombre;
+    public String nombre;
     private String direccion;
 
     public int getIdCliente() {

@@ -4,6 +4,7 @@
  */
 package DatosDB;
 
+import Dto.ComputadoraVenta;
 import Modelos.Computadora;
 import Modelos.ComputadoraEnsamblada;
 import Modelos.Coneccion;
@@ -37,7 +38,7 @@ public class QueryEnsambleComputadora {
             pstmt.setInt(1, ensamblado.getComputadora().getIdComputadora());
             pstmt.setInt(2, ensamblado.getUsuario().getIdUsuario());
             pstmt.setDate(3, new Date(ensamblado.getFechaEnsamblaje().getTime())); // Convertir java.util.Date a
-                                                                                   // java.sql.Date
+            // java.sql.Date
             pstmt.setDouble(4, ensamblado.getCostoTotal());
 
             int filasInsertadas = pstmt.executeUpdate();
@@ -119,7 +120,7 @@ public class QueryEnsambleComputadora {
             if (!stockNecesarioParaEnsamblar(idComputadora)) {
                 return false;
             }
-                
+
             String sqlStockUpdate = "UPDATE componente c "
                     + "JOIN ensamblaje_pieza ep ON c.id_componente = ep.id_componente "
                     + "SET c.cantidad_stock = c.cantidad_stock - ep.cantidad "
@@ -210,7 +211,7 @@ public class QueryEnsambleComputadora {
             String sql = "SELECT ce.id_ensamblado, c.nombre AS nombre_computadora, c.precio_venta, u.nombre_usuario, ce.fecha_ensamblaje, ce.costo_total "
                     + "FROM computadora_ensamblada ce "
                     + "JOIN computadora c ON ce.id_computadora = c.id_computadora "
-                    + "JOIN usuario u ON ce.id_usuario = u.id_usuario WHERE ce.vendido = false"
+                    + "JOIN usuario u ON ce.id_usuario = u.id_usuario WHERE ce.vendido = false "
                     + "ORDER BY ce.fecha_ensamblaje " + orden;
 
             pstmt = connection.prepareStatement(sql);
@@ -228,6 +229,7 @@ public class QueryEnsambleComputadora {
             }
 
         } catch (Exception ex) {
+            int x = 0;
         } finally {
             try {
                 if (rs != null) {
@@ -244,6 +246,7 @@ public class QueryEnsambleComputadora {
         }
 
         return computadorasEnsambladas;
+
     }
 
     public ComputadoraEnsamblada encontrarPorId(int id) {
@@ -254,12 +257,12 @@ public class QueryEnsambleComputadora {
 
             connection = Coneccion.getConnection();
 
-            String sql = "SELECT ec.id_ensamblaje, c.id_computadora, c.precio_venta, c.nombre AS nombre_computadora, " +
-                     "u.id_usuario, u.nombre_usuario, ec.fecha_ensamblaje, ec.costo_total, ec.vendido " +
-                     "FROM ensamblaje_computadora ec " +
-                     "JOIN computadora c ON ec.id_computadora = c.id_computadora " +
-                     "JOIN usuario u ON ec.id_usuario = u.id_usuario " +
-                     "WHERE ec.id_ensamblaje = ?";
+            String sql = "SELECT ec.id_ensamblado, c.id_computadora, c.precio_venta, c.nombre AS nombre_computadora, ec.nuevo_precio, "
+                    + "u.id_usuario, u.nombre_usuario, ec.fecha_ensamblaje, ec.costo_total, ec.vendido "
+                    + "FROM computadora_ensamblada ec "
+                    + "JOIN computadora c ON ec.id_Computadora = c.id_computadora "
+                    + "JOIN usuario u ON ec.id_usuario = u.id_usuario "
+                    + "WHERE ec.id_ensamblado = ?";
 
             pstmt = connection.prepareStatement(sql);
 
@@ -269,7 +272,8 @@ public class QueryEnsambleComputadora {
 
             if (rs.next()) {
                 ComputadoraEnsamblada ensamblado = new ComputadoraEnsamblada();
-                ensamblado.setIdEnsamblado(rs.getInt("id_ensamblaje"));
+                ensamblado.setIdEnsamblado(rs.getInt("id_ensamblado"));
+                ensamblado.setNuevoPrecio(rs.getDouble("ec.nuevo_precio"));
 
                 Computadora computadora = new Computadora();
                 computadora.setIdComputadora(rs.getInt("id_computadora"));
@@ -305,6 +309,138 @@ public class QueryEnsambleComputadora {
 
         return null;
     }
-    
+
+    public List<ComputadoraVenta> listarComputadorasParaVenta() {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<ComputadoraVenta> computadorasEnsambladas = new ArrayList<>();
+
+        try {
+            connection = Coneccion.getConnection();
+
+            String sql = "SELECT c.nombre AS nombre_computadora, c.precio_venta, COUNT(*) AS total, c.id_computadora, ce.nuevo_precio "
+                    + "FROM computadora_ensamblada ce "
+                    + "JOIN computadora c ON ce.id_computadora = c.id_computadora "
+                    + "WHERE ce.vendido = false "
+                    + "GROUP BY c.nombre, c.precio_venta, c.id_computadora, ce.nuevo_precio";
+
+            pstmt = connection.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                ComputadoraVenta computadoraventa = new ComputadoraVenta(rs.getInt("c.id_computadora"), rs.getDouble("c.precio_venta") - rs.getDouble("ce.nuevo_precio"), rs.getInt("total"), rs.getString("nombre_computadora"));
+                computadorasEnsambladas.add(computadoraventa);
+
+            }
+
+        } catch (Exception ex) {
+            int x = 0;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+
+            }
+        }
+
+        return computadorasEnsambladas;
+    }
+
+    public List<ComputadoraEnsamblada> encontrarPorIdComputadora(int idComputadora, int limite) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<ComputadoraEnsamblada> computadorasEnsamblada = new ArrayList<>();
+
+        try {
+            connection = Coneccion.getConnection();
+
+            String sql = "SELECT id_ensamblado,c.id_computadora, id_usuario, fecha_ensamblaje, costo_total, vendido, c.precio_venta, nuevo_precio "
+                    + "FROM computadora_ensamblada"
+                    + " INNER JOIN computadora c on c.id_computadora = computadora_ensamblada.id_computadora"
+                    + " WHERE c.id_computadora = ? And vendido = false limit ?";
+
+            pstmt = connection.prepareStatement(sql);
+            pstmt.setInt(1, idComputadora);
+            pstmt.setInt(2, limite);
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                ComputadoraEnsamblada computadoraEnsamble = new ComputadoraEnsamblada(
+                        rs.getInt("id_ensamblado"),
+                        new Computadora(rs.getInt("c.id_computadora"), "", rs.getDouble("c.precio_venta")),
+                        new Usuario(rs.getInt("id_usuario"), "", "", new Rol(0, "")),
+                        rs.getDate("fecha_ensamblaje"),
+                        rs.getInt("costo_total"),
+                        rs.getBoolean("vendido"),
+                        rs.getDouble("nuevo_precio"));
+                computadorasEnsamblada.add(computadoraEnsamble);
+
+            }
+
+        } catch (Exception ex) {
+            int x = 0;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+
+            }
+        }
+        return computadorasEnsamblada;
+    }
+
+    public void actualizarVendido(List<Integer> idsEnsamblados) {
+        Connection connection = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            connection = Coneccion.getConnection();
+
+            String sql = "UPDATE computadora_ensamblada SET vendido = true WHERE id_ensamblado = ?";
+
+            pstmt = connection.prepareStatement(sql);
+
+            for (int idEnsamblado : idsEnsamblados) {
+                pstmt.setInt(1, idEnsamblado);
+                pstmt.addBatch();
+            }
+
+            pstmt.executeBatch();
+
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+        } finally {
+
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }

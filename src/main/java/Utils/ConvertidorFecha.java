@@ -13,7 +13,11 @@ import java.time.format.DateTimeFormatter;
  * @author DELL
  */
 public class ConvertidorFecha {
+    
     public java.sql.Date ConvertirFecha(String fechaStr){
+        if (fechaStr == null) {
+            return null;
+        }
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate localDate = LocalDate.parse(fechaStr, formato);
         return Date.valueOf(localDate);
@@ -22,5 +26,13 @@ public class ConvertidorFecha {
     public Date ObtenerFechaActual(){
         java.util.Date utilDate = new java.util.Date();
         return new java.sql.Date(utilDate.getTime());
+    }
+    public java.sql.Date ConvertirFechaDos(String fechaStr){
+        if (fechaStr == null) {
+            return null;
+        }
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(fechaStr, formato);
+        return Date.valueOf(localDate);
     }
 }

@@ -20,7 +20,7 @@ import java.sql.Date;
 public class CargaArchivoService {
 
     public ArrayList<String> CargarArchivo(ArrayList<String> lineas) {
-        ArrayList<String> errores = new ArrayList<>(); // Lista para almacenar errores
+        ArrayList<String> errores = new ArrayList<>(); 
 
         QueryComponente queryComponente = new QueryComponente();
         QueryUsuario queryUsuario = new QueryUsuario();
@@ -28,11 +28,11 @@ public class CargaArchivoService {
         QueryEnsamblajePieza queryEnsamblaje = new QueryEnsamblajePieza();
         QueryEnsambleComputadora queryEnsambleComputadora = new QueryEnsambleComputadora();
         ConvertidorFecha convertidorFecha = new ConvertidorFecha();
-        
 
         for (int i = 0; i < lineas.size(); i++) {
             String recuperarPalabra = lineas.get(i);
-
+            recuperarPalabra = recuperarPalabra.replace("“", "\"");
+            recuperarPalabra = recuperarPalabra.replace("”", "\"");
             try {
                 int inicio = recuperarPalabra.indexOf("(") + 1;
                 int fin = recuperarPalabra.lastIndexOf(")");
@@ -55,8 +55,10 @@ public class CargaArchivoService {
                     int rol = Integer.parseInt(valores[2].trim());
 
                     Usuario user = new Usuario(-1, usuario, password, new Rol(rol, ""));
-                    queryUsuario.crear(user);
-
+                    boolean creado=queryUsuario.crear(user);
+                    if (!creado) {
+                        errores.add("El usuario no se puede crear:" + usuario);
+                    }
                 } else if (recuperarPalabra.startsWith("PIEZA")) {
                     if (valores.length < 2) {
                         errores.add("Error en la línea " + (i + 1) + ": falta información de la pieza.");
@@ -66,8 +68,8 @@ public class CargaArchivoService {
                     String nombre = valores[0].replace("\"", "").trim();
                     double costo = Double.parseDouble(valores[1].trim());
                     int stock = 0;
-                    
-                    if(valores.length == 3){
+
+                    if (valores.length == 3) {
                         stock = Integer.parseInt(valores[1].trim());
                     }
 
@@ -132,9 +134,9 @@ public class CargaArchivoService {
                         errores.add("Error en la línea " + (i + 1) + ": el usuario '" + usuario + "' no existe.");
                         continue;
                     }
-                    
+
                     boolean validoParaEnsamblar = queryEnsambleComputadora.ensamblarComputadora(compu.getIdComputadora(), nombre.getIdUsuario(), convertidorFecha.ConvertirFecha(fecha));
-                    if(!validoParaEnsamblar){
+                    if (!validoParaEnsamblar) {
                         errores.add("Error en la línea " + (i + 1) + ": No hay stock necesario para ensamblar.");
                     }
                 } else {

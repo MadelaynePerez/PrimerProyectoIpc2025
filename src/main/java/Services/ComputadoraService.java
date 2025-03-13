@@ -26,5 +26,7 @@ public class ComputadoraService {
     public List<Computadora> listarComputadorasParaEnsamblar(){
         return this.QueryComputadora.listarComputadorasParaEnsamblar();
     }
-    
+    public Computadora encontrarPorId (int idComputadora){
+        return this.QueryComputadora.encontrarPorId(idComputadora);
+    }
 }

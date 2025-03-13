@@ -32,4 +32,7 @@ public class ComponenteService {
     public List<Componente> ListarComponentes(boolean orden){
         return this.queryComponente.listarComponentes(orden);
     }
+    public List<Componente> obtenerComponentesSinStock(){
+        return this.queryComponente.obtenerComponentesSinStock();
+    }
 }

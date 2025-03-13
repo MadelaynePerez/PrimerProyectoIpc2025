@@ -1,10 +1,99 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Start Page</title>
+        <title>Computadora Feliz</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!-- Enlace a Font Awesome para los iconos -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #ffffff; 
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                color: #333;
+            }
+            h1 {
+                font-size: 36px;
+                color: #000080; 
+                margin-bottom: 30px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .roles-container {
+                display: flex;
+                gap: 30px;
+            }
+            .role-card {
+                background-color: #f8f9fa; 
+                padding: 25px;
+                border-radius: 15px;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                width: 180px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                cursor: pointer;
+            }
+            .role-card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            }
+            .role-icon {
+                font-size: 50px;
+                margin-bottom: 15px;
+                color: #000080; 
+            }
+            .role-title {
+                font-size: 20px;
+                font-weight: bold;
+                color: #333;
+            }
+            .login-link {
+                margin-top: 40px;
+                font-size: 18px;
+                color: #fff;
+                text-decoration: none;
+                background-color: #000080; 
+                padding: 10px 20px;
+                border-radius: 25px;
+                transition: background-color 0.3s ease;
+            }
+            .login-link:hover {
+                background-color: #ff3b2f; 
+            }
+        </style>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Bienvenido al Sistema de Computadora Feliz</h1>
+        <div class="roles-container">
+           
+            <a href="/ComputadoraFeliz/VistasGenerales/loginVista.jsp" class="role-card">
+                <div class="role-icon">
+                    <i class="fas fa-industry"></i>
+                </div>
+                <div class="role-title">Fábrica</div>
+            </a>
+
+            
+            <a href="/ComputadoraFeliz/VistasGenerales/loginVista.jsp" class="role-card">
+                <div class="role-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="role-title">Ventas</div>
+            </a>
+
+       
+            <a href="/ComputadoraFeliz/VistasGenerales/loginVista.jsp" class="role-card">
+                <div class="role-icon">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="role-title">Administración</div>
+            </a>
+        </div>
+        <!-- Enlace para redirigir a la vista de login -->
+        <a href="login.html" class="login-link">Ir a la vista de Login</a>
     </body>
 </html>

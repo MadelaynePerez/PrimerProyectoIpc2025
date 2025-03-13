@@ -36,7 +36,7 @@ public class LeerArchivo {
             }
             
         } catch (Exception e) {
-         
+         int x=0;
         }
         
         return lineas;

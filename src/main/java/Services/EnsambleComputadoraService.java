@@ -5,6 +5,7 @@
 package Services;
 
 import DatosDB.QueryEnsambleComputadora;
+import Dto.ComputadoraVenta;
 import Modelos.ComputadoraEnsamblada;
 import Utils.ConvertidorFecha;
 import java.util.List;
@@ -23,5 +24,8 @@ public class EnsambleComputadoraService {
     }
     public boolean stockNecesarioParaEnsamblar(int idComputadora) {
         return this.QueryEnsambleComputadora.stockNecesarioParaEnsamblar(idComputadora);
+    }
+    public List<ComputadoraVenta>listarComputadorasParaVenta(){
+        return this.QueryEnsambleComputadora.listarComputadorasParaVenta();
     }
 }

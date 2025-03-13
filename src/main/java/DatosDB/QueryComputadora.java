@@ -24,8 +24,12 @@ public class QueryComputadora {
     public boolean crear(Computadora computadora) {
         Connection connection = null;
         PreparedStatement pstmt = null;
-
+        Computadora computadoraExiistente =encontrarPorNombre(computadora.getNombre());
         try {
+            
+            if (computadoraExiistente != null) {
+                return false;
+            }
             connection = Coneccion.getConnection();
             String sql = "INSERT INTO Computadora (nombre, precio_venta) VALUES (?, ?)";
             pstmt = connection.prepareStatement(sql);
@@ -35,6 +39,8 @@ public class QueryComputadora {
 
             int filasInsertadas = pstmt.executeUpdate();
             return filasInsertadas > 0;
+            
+            
         } catch (SQLException ex) {
             Logger.getLogger(QueryComputadora.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -107,12 +113,12 @@ public class QueryComputadora {
         try {
             connection = Coneccion.getConnection();
 
-            // Consulta SQL para listar las computadoras con nombre y precio de venta
+            
             String sql = "SELECT c.id_computadora, c.nombre, c.precio_venta FROM computadora c";
             pstmt = connection.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
-            // Procesar el resultado
+            
             while (rs.next()) {
                 Computadora computadora = new Computadora();
                 computadora.setIdComputadora(rs.getInt("id_computadora"));
@@ -149,12 +155,12 @@ public class QueryComputadora {
         try {
             connection = Coneccion.getConnection();
 
-            // Consulta SQL para listar las computadoras con nombre y precio de venta
+           
             String sql = "SELECT c.id_computadora, c.nombre, c.precio_venta FROM computadora c";
             pstmt = connection.prepareStatement(sql);
             rs = pstmt.executeQuery();
 
-            // Procesar el resultado
+           
             while (rs.next()) {
                 if (queryEnsamblajePieza.validarSiTieneReceta(rs.getInt("id_computadora"))) {
                     Computadora computadora = new Computadora();

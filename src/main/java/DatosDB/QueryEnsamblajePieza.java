@@ -26,7 +26,7 @@ public class QueryEnsamblajePieza {
 
         try {
             connection = Coneccion.getConnection();
-            String sql = "INSERT INTO Ensamblaje_Pieza (id_computadora, id_componente, cantidad) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO ensamblaje_pieza (id_computadora, id_componente, cantidad) VALUES (?, ?, ?)";
             pstmt = connection.prepareStatement(sql);
 
             pstmt.setInt(1, ensamblajePieza.getComputadora().getIdComputadora());
